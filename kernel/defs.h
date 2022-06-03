@@ -60,6 +60,9 @@ void            ramdiskintr(void);
 void            ramdiskrw(struct buf*);
 
 // kalloc.c
+int             get_ref_count(uint64 pa);        
+void            increase_ref(uint64 pa);
+void            decrease_red(uint64 pa);
 void*           kalloc(void);
 void            kfree(void *);
 void            kinit(void);
@@ -145,6 +148,7 @@ void            trapinit(void);
 void            trapinithart(void);
 extern struct spinlock tickslock;
 void            usertrapret(void);
+int             cow_fault_handler(pagetable_t pagetable, uint64);
 
 // uart.c
 void            uartinit(void);
@@ -170,6 +174,7 @@ uint64          walkaddr(pagetable_t, uint64);
 int             copyout(pagetable_t, uint64, char *, uint64);
 int             copyin(pagetable_t, char *, uint64, uint64);
 int             copyinstr(pagetable_t, char *, uint64, uint64);
+
 
 // plic.c
 void            plicinit(void);
