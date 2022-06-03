@@ -17,7 +17,6 @@ void freerange(void *pa_start, void *pa_end);
 
 extern char end[]; // first address after kernel.
                    // defined by kernel.ld.
-
 struct run
 {
   struct run *next;
@@ -40,9 +39,6 @@ int get_ref_count(uint64 pa)
 void
 increase_ref(uint64 pa)
 {
-//      uint64 entry = (pa-KERNBASE) / PGSIZE;
-//     while(cas(kmem.ref_count_arr + entry, kmem.ref_count_arr[entry], kmem.ref_count_arr[entry] + 1));
-// }
   int ref;
   do{
     ref = kmem.ref_count_arr[(pa - KERNBASE) / PGSIZE];
@@ -52,9 +48,6 @@ increase_ref(uint64 pa)
 void
 decrease_ref(uint64 pa)
 {
-//       uint64 entry = (pa-KERNBASE) / PGSIZE;
-//     while(cas(kmem.ref_count_arr + entry, kmem.ref_count_arr[entry], kmem.ref_count_arr[entry] - 1));
-// }
   int ref;
   do{
     ref = kmem.ref_count_arr[(pa - KERNBASE) / PGSIZE];
@@ -118,7 +111,7 @@ kalloc(void)
   r = kmem.freelist;
   if (r)
     kmem.freelist = r->next;
-    
+
   release(&kmem.lock);
   if (r)
     memset((char *)r, 5, PGSIZE); // fill with junk

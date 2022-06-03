@@ -382,27 +382,17 @@ int copyin(pagetable_t pagetable, char *dst, uint64 srcva, uint64 len)
   while (len > 0)
   {
     va0 = PGROUNDDOWN(srcva);
-    // used less than zero is the page was a cow page and
-
-    // a fault happened, i.e. the page is not a cow page
-
-    // if the below statement is false then continue
-
-    // with the previous implementation of the copyout function
-
     if (cow_fault_handler(pagetable, va0) < 0)
     {
-      // error
-      return -1;
+      return -1;     
     }
     pa0 = walkaddr(pagetable, va0);
     if (pa0 == 0)
-      return -1;
+      return -1; 
     n = PGSIZE - (srcva - va0);
     if (n > len)
       n = len;
     memmove(dst, (void *)(pa0 + (srcva - va0)), n);
-
     len -= n;
     dst += n;
     srcva = va0 + PGSIZE;
